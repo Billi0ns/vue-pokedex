@@ -1,12 +1,20 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <app-header></app-header>
+    <div class="fixed-top-padding"></div>
     <router-view />
   </div>
 </template>
+
+<script>
+import AppHeader from '@/components/AppHeader.vue';
+
+export default {
+  components: {
+    AppHeader,
+  },
+};
+</script>
 
 <style lang="scss">
 #app {
@@ -27,6 +35,16 @@
     &.router-link-exact-active {
       color: #42b983;
     }
+  }
+}
+
+.fixed-top-padding {
+  padding-top: 70px;
+}
+
+@media (min-width: 768px) {
+  .fixed-top-padding {
+    padding-top: 100px;
   }
 }
 </style>
