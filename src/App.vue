@@ -2,7 +2,12 @@
   <div id="app">
     <app-header></app-header>
     <div class="fixed-top-padding"></div>
-    <router-view />
+
+    <transition name="component-fade" mode="out-in">
+      <keep-alive include="Home">
+        <router-view />
+      </keep-alive>
+    </transition>
   </div>
 </template>
 
@@ -37,5 +42,15 @@ body {
   .fixed-top-padding {
     padding-top: 100px;
   }
+}
+
+// Transition
+.component-fade-enter-active {
+  transition: opacity 0.3s ease-out;
+}
+
+.component-fade-enter,
+.component-fade-leave-active {
+  opacity: 0;
 }
 </style>

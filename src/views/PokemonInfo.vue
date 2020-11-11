@@ -3,25 +3,30 @@
     <div class="row">
       <div class="col-lg-1"></div>
       <div class="col-xs-12 col-md-6 col-lg-5 image-container">
-        <b-img :src="pokemon.imageUrl" class="pokemon-image"></b-img>
+        <b-img :src="imageUrl" class="pokemon-image"></b-img>
       </div>
       <div class="col-xs-12 col-md-6 col-lg-5 text-left">
-        <h1 class="pokemon-name">{{ pokemon.name }}</h1>
-        <p class="pokemon-id">{{ pokemon.id }}</p>
+        <h1 class="pokemon-name">{{ pokemon.id }}. {{ pokemon.name }}</h1>
+
+        <div>Height: {{ pokemonInfo.height }}</div>
+        <div>Weight: {{ pokemonInfo.weight }}</div>
+        <div>Type:</div>
       </div>
     </div>
   </main>
 </template>
 
 <script>
-import { reactive } from '@vue/composition-api';
+import { ref, reactive } from '@vue/composition-api';
 
 export default {
   setup(_, { root }) {
+    const pokemonID = ref(root.$store.state.currentPokemon.id);
+    const imageUrl = ref(root.$store.state.currentPokemon.imageUrl);
     let pokemon = reactive({});
 
     function getProductInfo() {
-      console.log('a');
+      console.log(pokemonID.value);
     }
 
     function setPokemonInfo() {
@@ -29,7 +34,6 @@ export default {
 
       if (Object.keys(currentPokemon).length !== 0) {
         pokemon = currentPokemon;
-        root.$store.commit('resetCurrentProduct');
       } else {
         getProductInfo();
       }
@@ -39,7 +43,27 @@ export default {
 
     return {
       pokemon,
+      imageUrl,
     };
+  },
+  data() {
+    return {
+      url: this.$store.state.currentPokemon.url,
+      pokemonInfo: {},
+    };
+  },
+  methods: {
+    async fetchPokemon() {
+      const res = await fetch(this.url);
+      const data = await res.json();
+      this.pokemonInfo = data;
+      console.log(data);
+      console.log(this.pokemonInfo.height);
+      // types
+    },
+  },
+  created() {
+    this.fetchPokemon();
   },
 };
 </script>
@@ -67,12 +91,6 @@ export default {
   font-size: 28px;
   color: $blackish-grey;
   text-transform: capitalize;
-}
-
-.pokemon-id {
-  font-size: 20px;
-  font-weight: bold;
-  color: $blackish-grey;
 }
 
 @media (min-width: 768px) {
