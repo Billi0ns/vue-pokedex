@@ -5,34 +5,39 @@
         class="imageContainer cursorPointer"
         :class="{ 'skeleton-loading': !imageLoaded }"
         ref="imageContainer"
+        @click="handleClick"
       ></div>
 
       <div class="cursorPointer pokemon-title">{{ pokemon.name }}</div>
-      <div class="pokemon-id">#{{ pokemonID }}</div>
+      <div class="pokemon-id">#{{ pokemonInfo.id }}</div>
     </div>
   </div>
 </template>
 
 <script>
 import { ref, computed } from '@vue/composition-api';
+// import router from '@/router';
 
 export default {
   props: {
     pokemon: Object,
   },
-  setup(props) {
+  setup(props, { root }) {
     const imageLoaded = ref(false);
     const imageContainer = ref(null);
+    const pokemonInfo = props.pokemon;
 
     const pokemonID = computed(() => {
-      const { url } = props.pokemon;
+      const { url } = pokemonInfo;
       const re = /https:\/\/pokeapi.co\/api\/v2\/pokemon\/(\d+)\//i;
       return url.match(re)[1];
     });
+    pokemonInfo.id = pokemonID.value;
 
     function setImage() {
       const img = new Image();
-      const imageUrl = `https://pokeres.bastionbot.org/images/pokemon/${pokemonID.value}.png`;
+      const imageUrl = `https://pokeres.bastionbot.org/images/pokemon/${pokemonInfo.id}.png`;
+      pokemonInfo.imageUrl = imageUrl;
 
       img.src = imageUrl;
       img.onload = () => {
@@ -41,12 +46,18 @@ export default {
       };
     }
 
+    function handleClick() {
+      root.$store.commit('setCurrentPokemon', pokemonInfo);
+      root.$router.push({ path: `/pokemon/${pokemonInfo.name}` });
+    }
+
     setImage();
 
     return {
       imageLoaded,
       imageContainer,
-      pokemonID,
+      pokemonInfo,
+      handleClick,
     };
   },
 };
@@ -61,11 +72,11 @@ export default {
   width: 100%;
   padding: 50%;
   margin-bottom: 10px;
-  background-color: $light-grey;
+  background-color: $white-light;
   background-position: center center;
   background-repeat: no-repeat;
   overflow: hidden;
-  background-size: contain;
+  background-size: 90%;
   position: relative;
 }
 
