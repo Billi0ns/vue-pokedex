@@ -3,10 +3,15 @@
     <app-header></app-header>
     <div class="fixed-top-padding"></div>
 
+    <keep-alive include="Home">
+      <router-view v-if="$route.meta.keepAlive" />
+    </keep-alive>
+
     <transition name="component-fade" mode="out-in">
-      <keep-alive include="Home">
-        <router-view />
-      </keep-alive>
+      <router-view
+        v-if="!$route.meta.keepAlive"
+        :key="$route.name + ($route.params.id || null)"
+      ></router-view>
     </transition>
   </div>
 </template>
