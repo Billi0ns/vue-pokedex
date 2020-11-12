@@ -1,6 +1,6 @@
 <template>
   <div class="mb-4">
-    <div class="pokemon-card" v-if="pokemonID">
+    <div class="pokemon-card">
       <div
         class="imageContainer cursorPointer"
         :class="{ 'skeleton-loading': !imageLoaded }"
@@ -9,7 +9,7 @@
       ></div>
 
       <div class="cursorPointer pokemon-title">{{ pokemon.name }}</div>
-      <div class="pokemon-id">#{{ pokemonID }}</div>
+      <div class="pokemon-id">#{{ pokemonData.id.value }}</div>
     </div>
   </div>
 </template>
@@ -26,7 +26,7 @@ export default {
     const imageContainer = ref(null);
     const pokemonData = props.pokemon;
 
-    const pokemonID = computed(() => {
+    pokemonData.id = computed(() => {
       const { url } = pokemonData;
       const re = /https:\/\/pokeapi.co\/api\/v2\/pokemon\/(\d+)\//i;
       return url.match(re)[1];
@@ -34,7 +34,7 @@ export default {
 
     function setImage() {
       const img = new Image();
-      const imageUrl = `https://pokeres.bastionbot.org/images/pokemon/${pokemonID.value}.png`;
+      const imageUrl = `https://pokeres.bastionbot.org/images/pokemon/${pokemonData.id.value}.png`;
       pokemonData.imageUrl = imageUrl;
 
       img.src = imageUrl;
@@ -55,7 +55,6 @@ export default {
       imageLoaded,
       imageContainer,
       handleClick,
-      pokemonID,
       pokemonData,
     };
   },
