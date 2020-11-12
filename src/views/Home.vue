@@ -39,7 +39,7 @@ export default {
         return;
       }
 
-      if (bottomOfPage || (pageHeight < visible && !isExecuted)) {
+      if ((bottomOfPage || pageHeight < visible) && !isExecuted) {
         const url = `https://pokeapi.co/api/v2/pokemon?limit=12&offset=${state.offset}`;
         isExecuted = true;
 
