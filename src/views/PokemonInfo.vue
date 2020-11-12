@@ -18,21 +18,16 @@
 </template>
 
 <script>
-// eslint-disable-next-line no-unused-vars
-import { ref, reactive } from '@vue/composition-api';
-
 export default {
   data() {
     return {
       url: this.$store.state.currentPokemon.url,
       imageUrl: this.$store.state.currentPokemon.imageUrl,
-      // pokemon: this.$store.state.currentPokemon,
       pokemon: null,
     };
   },
   methods: {
     async fetchPokemon() {
-      console.log(this.$route.params.name);
       const url = `https://pokeapi.co/api/v2/pokemon/${this.$route.params.name}`;
       const res = await fetch(url);
       const data = await res.json();
