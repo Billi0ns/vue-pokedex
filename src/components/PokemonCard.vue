@@ -1,6 +1,6 @@
 <template>
   <div class="mb-4 cursorPointer" @click="handleClick">
-    <div class="pokemon-card">
+    <div class="pokemon-card" v-if="pokemon">
       <div
         class="imageContainer"
         :class="{ 'skeleton-loading': !imageLoaded }"
@@ -44,8 +44,7 @@ export default {
     }
 
     function handleClick() {
-      root.$store.commit('setCurrentPokemon', pokemonData);
-      root.$router.push({ path: `/pokemon/${pokemonData.pokemonInfo.name}` });
+      root.$router.push({ path: `/pokemon/${pokemonData.name}` });
     }
 
     setImage();

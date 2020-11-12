@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <main class="container">
-      <div v-if="state.pokemons" class="row">
+      <div class="row ">
         <pokemon-card
           v-for="pokemon in state.pokemons"
           :key="pokemon.name"
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import { reactive } from '@vue/composition-api';
+import { onMounted, reactive } from '@vue/composition-api';
 import PokemonCard from '@/components/PokemonCard.vue';
 
 export default {
@@ -25,36 +25,41 @@ export default {
   setup() {
     const state = reactive({
       pokemons: [],
+      offset: 12,
     });
 
-    async function fetchPokemonInfo(url) {
-      const res = await fetch(url);
-      const data = await res.json();
-      const pokemonTypes = [];
-      const pokemonAbilities = [];
+    async function onscroll() {
+      const { scrollY } = window;
+      const visible = document.documentElement.clientHeight;
+      const pageHeight = document.documentElement.scrollHeight;
+      const bottomOfPage = visible + scrollY >= pageHeight;
 
-      data.types.map((obj) => pokemonTypes.push(obj.type.name));
-      data.abilities.map((obj) => pokemonAbilities.push(obj.ability.name));
-      data.types = pokemonTypes;
-      data.abilities = pokemonAbilities;
+      if (state.offset >= 156) {
+        return;
+      }
 
-      return data;
+      if (bottomOfPage || pageHeight < visible) {
+        const url = `https://pokeapi.co/api/v2/pokemon?limit=12&offset=${state.offset}`;
+
+        fetch(url)
+          .then((res) => res.json())
+          .then((data) => {
+            state.pokemons.push(...data.results);
+            state.offset += 12;
+          })
+          .catch((err) => console.log(err));
+      }
     }
 
+    onMounted(() => {
+      window.addEventListener('scroll', onscroll);
+    });
+
     async function fetchPokemon() {
-      const url = 'https://pokeapi.co/api/v2/pokemon?limit=5';
+      const url = 'https://pokeapi.co/api/v2/pokemon?limit=12';
       const res = await fetch(url);
       const data = await res.json();
-
-      data.results.forEach((pokemon) => {
-        (async () => {
-          pokemon.pokemonInfo = await fetchPokemonInfo(pokemon.url);
-        })();
-      });
-
-      (async () => {
-        state.pokemons = await data.results;
-      })();
+      state.pokemons = data.results;
     }
 
     fetchPokemon();

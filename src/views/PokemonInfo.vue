@@ -15,14 +15,15 @@
       </div>
     </div>
   </main>
+  <app-loading v-else></app-loading>
 </template>
 
 <script>
+import AppLoading from '@/components/AppLoading.vue';
+
 export default {
   data() {
     return {
-      url: this.$store.state.currentPokemon.url,
-      imageUrl: this.$store.state.currentPokemon.imageUrl,
       pokemon: null,
     };
   },
@@ -45,17 +46,11 @@ export default {
     },
   },
   created() {
-    const { currentPokemon } = this.$store.state;
-    if (Object.keys(currentPokemon).length !== 0) {
-      this.pokemon = { ...currentPokemon };
-      this.pokemon.id = this.pokemon.id.value;
-      this.pokemon.height = this.pokemon.pokemonInfo.height;
-      this.pokemon.weight = this.pokemon.pokemonInfo.weight;
-      this.pokemon.types = this.pokemon.pokemonInfo.types.join(', ');
-      this.pokemon.abilities = this.pokemon.pokemonInfo.abilities.join(', ');
-    } else {
-      this.fetchPokemon();
-    }
+    this.fetchPokemon();
+  },
+
+  components: {
+    AppLoading,
   },
 };
 </script>
