@@ -48,12 +48,13 @@ export default {
           .then((data) => {
             state.pokemons.push(...data.results);
             state.offset += 12;
+            isExecuted = false;
           })
           .catch((err) => console.log(err));
 
-        setTimeout(() => {
+        /* setTimeout(() => {
           isExecuted = false;
-        }, 2000);
+        }, 2000); */
       }
     }
 
