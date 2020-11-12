@@ -10,7 +10,7 @@
 
         <div>Height: {{ pokemonInfo.height }}</div>
         <div>Weight: {{ pokemonInfo.weight }}</div>
-        <div>Type:</div>
+        <div>Type: {{ pokemonInfo.types }}</div>
       </div>
     </div>
   </main>
@@ -56,10 +56,10 @@ export default {
     async fetchPokemon() {
       const res = await fetch(this.url);
       const data = await res.json();
+      const pokemonTypes = [];
       this.pokemonInfo = data;
-      console.log(data);
-      console.log(this.pokemonInfo.height);
-      // types
+      this.pokemonInfo.types.map((obj) => pokemonTypes.push(obj.type.name));
+      this.pokemonInfo.types = pokemonTypes;
     },
   },
   created() {

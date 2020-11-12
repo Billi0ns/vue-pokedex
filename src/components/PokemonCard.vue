@@ -16,7 +16,6 @@
 
 <script>
 import { ref, computed } from '@vue/composition-api';
-// import router from '@/router';
 
 export default {
   props: {
@@ -76,7 +75,7 @@ export default {
   background-position: center center;
   background-repeat: no-repeat;
   overflow: hidden;
-  background-size: 90%;
+  background-size: 80%;
   position: relative;
 }
 
