@@ -1,14 +1,13 @@
 <template>
-  <div class="mb-4">
+  <div class="mb-4 cursorPointer" @click="handleClick">
     <div class="pokemon-card">
       <div
-        class="imageContainer cursorPointer"
+        class="imageContainer"
         :class="{ 'skeleton-loading': !imageLoaded }"
         ref="imageContainer"
-        @click="handleClick"
       ></div>
 
-      <div class="cursorPointer pokemon-title">{{ pokemon.name }}</div>
+      <div class="pokemon-title">{{ pokemon.name }}</div>
       <div class="pokemon-id">#{{ pokemonData.id.value }}</div>
     </div>
   </div>
@@ -95,14 +94,9 @@ export default {
 }
 
 @media (min-width: 992px) {
-  .pokemon-card:hover .imageContainer::after {
-    content: '';
-    background: rgba(0, 0, 0, 0.5);
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+  .pokemon-card:hover .imageContainer {
+    transition: all 0.3s ease-out;
+    background-color: #99ccff;
   }
 }
 
