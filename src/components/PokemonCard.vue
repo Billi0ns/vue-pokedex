@@ -1,6 +1,6 @@
 <template>
   <div class="mb-4">
-    <div class="pokemon-card">
+    <div class="pokemon-card" v-if="pokemonID">
       <div
         class="imageContainer cursorPointer"
         :class="{ 'skeleton-loading': !imageLoaded }"
@@ -9,7 +9,7 @@
       ></div>
 
       <div class="cursorPointer pokemon-title">{{ pokemon.name }}</div>
-      <div class="pokemon-id">#{{ pokemonInfo.id }}</div>
+      <div class="pokemon-id">#{{ pokemonID }}</div>
     </div>
   </div>
 </template>
@@ -24,19 +24,18 @@ export default {
   setup(props, { root }) {
     const imageLoaded = ref(false);
     const imageContainer = ref(null);
-    const pokemonInfo = props.pokemon;
+    const pokemonData = props.pokemon;
 
     const pokemonID = computed(() => {
-      const { url } = pokemonInfo;
+      const { url } = pokemonData;
       const re = /https:\/\/pokeapi.co\/api\/v2\/pokemon\/(\d+)\//i;
       return url.match(re)[1];
     });
-    pokemonInfo.id = pokemonID.value;
 
     function setImage() {
       const img = new Image();
-      const imageUrl = `https://pokeres.bastionbot.org/images/pokemon/${pokemonInfo.id}.png`;
-      pokemonInfo.imageUrl = imageUrl;
+      const imageUrl = `https://pokeres.bastionbot.org/images/pokemon/${pokemonID.value}.png`;
+      pokemonData.imageUrl = imageUrl;
 
       img.src = imageUrl;
       img.onload = () => {
@@ -46,8 +45,8 @@ export default {
     }
 
     function handleClick() {
-      root.$store.commit('setCurrentPokemon', pokemonInfo);
-      root.$router.push({ path: `/pokemon/${pokemonInfo.name}` });
+      root.$store.commit('setCurrentPokemon', pokemonData);
+      root.$router.push({ path: `/pokemon/${pokemonData.pokemonInfo.name}` });
     }
 
     setImage();
@@ -55,8 +54,9 @@ export default {
     return {
       imageLoaded,
       imageContainer,
-      pokemonInfo,
       handleClick,
+      pokemonID,
+      pokemonData,
     };
   },
 };

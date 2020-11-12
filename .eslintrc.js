@@ -11,5 +11,6 @@ module.exports = {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'import/no-unresolved': [2, { ignore: ['.vue$'] }],
+    'no-param-reassign': [2, { props: false }],
   },
 };
