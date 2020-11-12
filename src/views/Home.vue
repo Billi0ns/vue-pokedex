@@ -33,13 +33,15 @@ export default {
       const visible = document.documentElement.clientHeight;
       const pageHeight = document.documentElement.scrollHeight;
       const bottomOfPage = visible + scrollY >= pageHeight;
+      let isExecuted = false;
 
       if (state.offset >= 156) {
         return;
       }
 
-      if (bottomOfPage || pageHeight < visible) {
+      if (bottomOfPage || (pageHeight < visible && !isExecuted)) {
         const url = `https://pokeapi.co/api/v2/pokemon?limit=12&offset=${state.offset}`;
+        isExecuted = true;
 
         fetch(url)
           .then((res) => res.json())
@@ -48,6 +50,10 @@ export default {
             state.offset += 12;
           })
           .catch((err) => console.log(err));
+
+        setTimeout(() => {
+          isExecuted = false;
+        }, 2000);
       }
     }
 
