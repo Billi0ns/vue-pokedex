@@ -46,7 +46,7 @@ export default {
     const state = reactive({
       pokemons: [],
       allPokemons: [],
-      offset: 12,
+      offset: 0,
       limit: 12,
       fullyLoaded: false,
       getPokemons: computed(() => {
@@ -87,15 +87,6 @@ export default {
     onMounted(() => {
       createObserver();
     });
-
-    async function fetchPokemon() {
-      const url = 'https://pokeapi.co/api/v2/pokemon?limit=12';
-      const res = await fetch(url);
-      const data = await res.json();
-      state.pokemons = data.results;
-    }
-
-    fetchPokemon();
 
     async function fetchAllPokemons() {
       const url = 'https://pokeapi.co/api/v2/pokemon?limit=151';

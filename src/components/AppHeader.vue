@@ -57,6 +57,8 @@ export default {
       const path = '/';
       if (root.$route.path !== path) {
         root.$router.push(path);
+      } else {
+        window.scrollTo(0, 0);
       }
 
       if (event.target.className === 'clearQuery') {
