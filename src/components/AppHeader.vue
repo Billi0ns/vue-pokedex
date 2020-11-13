@@ -4,7 +4,7 @@
       <b-navbar-nav>
         <b-navbar-brand>
           <span @click="handleClick" class="clearQuery">Pokedex</span>
-          <a href="https://github.com/Billi0ns/vue-pokemon">
+          <a href="https://github.com/Billi0ns/vue-pokedex">
             <img
               src="../assets/github-brands.svg"
               width="20px"
