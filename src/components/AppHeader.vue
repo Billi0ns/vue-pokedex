@@ -18,7 +18,11 @@
               placeholder="Search"
               v-model="query"
             ></b-form-input>
-            <b-button variant="outline-success" class="my-2 my-sm-0">
+            <b-button
+              variant="outline-success"
+              class="my-2 my-sm-0"
+              @click="handleClick"
+            >
               Search
             </b-button>
           </b-nav-form>
@@ -39,12 +43,15 @@ export default {
       root.$store.commit('setQuery', query.value.toLowerCase());
     });
 
-    function handleClick() {
+    function handleClick(event) {
       const path = '/';
       if (root.$route.path !== path) {
         this.$router.push(path);
       }
-      query.value = '';
+
+      if (event.target.className === 'navbar-brand') {
+        query.value = '';
+      }
     }
 
     return {
