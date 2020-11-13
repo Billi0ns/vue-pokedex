@@ -26,6 +26,7 @@
               class="mr-sm-2"
               placeholder="Search"
               v-model="query"
+              @keydown.enter.prevent="handleClick"
             ></b-form-input>
             <b-button
               variant="outline-success"
