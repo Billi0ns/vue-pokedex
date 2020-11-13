@@ -2,7 +2,16 @@
   <header class="mb-3 fixed-top">
     <b-navbar toggleable="md" type="light" class="customNav">
       <b-navbar-nav>
-        <b-navbar-brand @click="handleClick">Vue Pokemon</b-navbar-brand>
+        <b-navbar-brand>
+          <span @click="handleClick" class="clearQuery">Pokedex</span>
+          <a href="https://github.com/Billi0ns/vue-pokemon">
+            <img
+              src="../assets/github-brands.svg"
+              width="20px"
+              class="github"
+            />
+          </a>
+        </b-navbar-brand>
       </b-navbar-nav>
 
       <b-navbar-toggle
@@ -46,10 +55,10 @@ export default {
     function handleClick(event) {
       const path = '/';
       if (root.$route.path !== path) {
-        this.$router.push(path);
+        root.$router.push(path);
       }
 
-      if (event.target.className === 'navbar-brand') {
+      if (event.target.className === 'clearQuery') {
         query.value = '';
       }
     }
@@ -70,6 +79,15 @@ export default {
 
 .fixed-top {
   z-index: 10;
+}
+
+.github {
+  margin-left: 15px;
+
+  &:hover {
+    transform: rotate(360deg);
+    transition: all 0.8s ease;
+  }
 }
 
 @media (min-width: 992px) {

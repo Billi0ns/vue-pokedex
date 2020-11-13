@@ -14,6 +14,10 @@
           :class="{ hidden: query }"
         ></app-loading>
       </div>
+      <div v-if="state.fullyLoaded" class="my-4">
+        Icon made by
+        <a href="https://fontawesome.com/license">fontawesome.com</a>
+      </div>
     </main>
   </div>
 </template>
