@@ -1,11 +1,9 @@
 <template>
   <header class="mb-3 fixed-top">
     <b-navbar toggleable="md" type="light" class="customNav">
-      <router-link to="/">
-        <b-navbar-brand>
-          Vue Pokemon
-        </b-navbar-brand>
-      </router-link>
+      <b-navbar-nav>
+        <b-navbar-brand @click="handleClick">Vue Pokemon</b-navbar-brand>
+      </b-navbar-nav>
 
       <b-navbar-toggle
         target="nav-collapse"
@@ -15,13 +13,14 @@
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar class="ml-auto">
           <b-nav-form>
-            <b-form-input class="mr-sm-2" placeholder="Search"></b-form-input>
-            <b-button
-              variant="outline-success"
-              class="my-2 my-sm-0"
-              type="submit"
-              >Search</b-button
-            >
+            <b-form-input
+              class="mr-sm-2"
+              placeholder="Search"
+              v-model="query"
+            ></b-form-input>
+            <b-button variant="outline-success" class="my-2 my-sm-0">
+              Search
+            </b-button>
           </b-nav-form>
         </b-navbar>
       </b-collapse>
@@ -30,7 +29,30 @@
 </template>
 
 <script>
-export default {};
+import { ref, watch } from '@vue/composition-api';
+
+export default {
+  setup(_, { root }) {
+    const query = ref('');
+
+    watch(query, () => {
+      root.$store.commit('setQuery', query.value.toLowerCase());
+    });
+
+    function handleClick() {
+      const path = '/';
+      if (root.$route.path !== path) {
+        this.$router.push(path);
+      }
+      query.value = '';
+    }
+
+    return {
+      query,
+      handleClick,
+    };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -48,6 +70,7 @@ export default {};
     transform: translateX(-50%) translateY(-50%);
     left: 50%;
     position: absolute;
+    cursor: pointer;
   }
 
   .navbar-collapse {

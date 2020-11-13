@@ -3,7 +3,7 @@
     <main class="container">
       <div class="row ">
         <pokemon-card
-          v-for="pokemon in state.pokemons"
+          v-for="pokemon in state.getPokemons"
           :key="pokemon.name"
           :pokemon="pokemon"
           class="col-6 col-md-4 col-lg-3"
@@ -11,6 +11,7 @@
         <app-loading
           id="loading-container"
           v-if="!state.fullyLoaded"
+          :class="{ hidden: query }"
         ></app-loading>
       </div>
     </main>
@@ -18,7 +19,14 @@
 </template>
 
 <script>
-import { onMounted, reactive } from '@vue/composition-api';
+import {
+  ref,
+  onMounted,
+  reactive,
+  computed,
+  watch,
+} from '@vue/composition-api';
+
 import PokemonCard from '@/components/PokemonCard.vue';
 import AppLoading from '@/components/AppLoading.vue';
 
@@ -28,12 +36,21 @@ export default {
     PokemonCard,
     AppLoading,
   },
-  setup() {
+  setup(_, { root }) {
+    const query = ref(computed(() => root.$store.state.query));
+    let filteredPokemons = reactive([]);
     const state = reactive({
       pokemons: [],
+      allPokemons: [],
       offset: 12,
       limit: 12,
       fullyLoaded: false,
+      getPokemons: computed(() => {
+        if (query.value) {
+          return filteredPokemons;
+        }
+        return state.pokemons;
+      }),
     });
 
     function createObserver() {
@@ -76,8 +93,25 @@ export default {
 
     fetchPokemon();
 
+    async function fetchAllPokemons() {
+      const url = 'https://pokeapi.co/api/v2/pokemon?limit=151';
+      const res = await fetch(url);
+      const data = await res.json();
+      state.allPokemons = data.results;
+    }
+
+    fetchAllPokemons();
+
+    watch(query, () => {
+      // eslint-disable-next-line arrow-body-style
+      filteredPokemons = state.allPokemons.filter((pokemon) => {
+        return pokemon.name.includes(query.value);
+      });
+    });
+
     return {
       state,
+      query,
     };
   },
 };
@@ -91,5 +125,9 @@ export default {
 #loading-container {
   width: 100%;
   height: auto;
+}
+
+.hidden {
+  display: none;
 }
 </style>
