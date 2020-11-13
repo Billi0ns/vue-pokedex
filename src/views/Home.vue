@@ -26,36 +26,45 @@ export default {
     const state = reactive({
       pokemons: [],
       offset: 12,
+      limit: 12,
     });
 
+    let debounceTimer;
     async function onscroll() {
-      const { scrollY } = window;
-      const visible = document.documentElement.clientHeight;
-      const pageHeight = document.documentElement.scrollHeight;
-      const bottomOfPage = visible + scrollY >= pageHeight;
-      let isExecuted = false;
-
-      if (state.offset >= 156) {
-        return;
+      if (debounceTimer) {
+        window.clearTimeout(debounceTimer);
       }
 
-      if ((bottomOfPage || pageHeight < visible) && !isExecuted) {
-        const url = `https://pokeapi.co/api/v2/pokemon?limit=12&offset=${state.offset}`;
-        isExecuted = true;
+      debounceTimer = window.setTimeout(() => {
+        const scrollHeight = document.body.clientHeight;
+        const scrollPos = window.innerHeight + window.pageYOffset;
+        let isExecuted = false;
 
-        fetch(url)
-          .then((res) => res.json())
-          .then((data) => {
-            state.pokemons.push(...data.results);
-            state.offset += 12;
-            isExecuted = false;
-          })
-          .catch((err) => console.log(err));
+        if (state.offset > 144) {
+          return;
+        }
 
-        /* setTimeout(() => {
-          isExecuted = false;
-        }, 2000); */
-      }
+        if (
+          // eslint-disable-next-line operator-linebreak
+          (scrollHeight - 300 >= scrollPos) / scrollHeight === 0 &&
+          !isExecuted
+        ) {
+          const url = `https://pokeapi.co/api/v2/pokemon?limit=${state.limit}&offset=${state.offset}`;
+          isExecuted = true;
+
+          fetch(url)
+            .then((res) => res.json())
+            .then((data) => {
+              state.pokemons.push(...data.results);
+              state.offset += 12;
+              if (state.offset === 144) {
+                state.limit = 7;
+              }
+              isExecuted = false;
+            })
+            .catch((err) => console.log(err));
+        }
+      }, 200);
     }
 
     onMounted(() => {
