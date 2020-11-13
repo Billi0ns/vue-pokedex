@@ -36,28 +36,11 @@ export default {
       fullyLoaded: false,
     });
 
-    let debounceTimer;
-    async function onscroll() {
-      if (debounceTimer) {
-        window.clearTimeout(debounceTimer);
-      }
-
-      debounceTimer = window.setTimeout(() => {
-        const scrollHeight = document.body.clientHeight;
-        const scrollPos = window.innerHeight + window.pageYOffset;
-        let isExecuted = false;
-
-        if (state.offset > 144) {
-          return;
-        }
-
-        if (
-          // eslint-disable-next-line operator-linebreak
-          (scrollHeight - 300 >= scrollPos) / scrollHeight === 0 &&
-          !isExecuted
-        ) {
+    function createObserver() {
+      const observer = new IntersectionObserver((entries) => {
+        const firstEntry = entries[0];
+        if (firstEntry.isIntersecting) {
           const url = `https://pokeapi.co/api/v2/pokemon?limit=${state.limit}&offset=${state.offset}`;
-          isExecuted = true;
 
           fetch(url)
             .then((res) => res.json())
@@ -66,19 +49,22 @@ export default {
               state.offset += 12;
               if (state.limit === 7) {
                 state.fullyLoaded = true;
+                observer.disconnect();
               }
               if (state.offset === 144) {
                 state.limit = 7;
               }
-              isExecuted = false;
             })
             .catch((err) => console.log(err));
         }
-      }, 200);
+      });
+
+      const bottomElement = document.querySelector('#loading-container');
+      observer.observe(bottomElement);
     }
 
     onMounted(() => {
-      window.addEventListener('scroll', onscroll);
+      createObserver();
     });
 
     async function fetchPokemon() {
