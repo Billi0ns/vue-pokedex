@@ -8,6 +8,10 @@
           :pokemon="pokemon"
           class="col-6 col-md-4 col-lg-3"
         ></pokemon-card>
+        <app-loading
+          id="loading-container"
+          v-if="!state.fullyLoaded"
+        ></app-loading>
       </div>
     </main>
   </div>
@@ -16,17 +20,20 @@
 <script>
 import { onMounted, reactive } from '@vue/composition-api';
 import PokemonCard from '@/components/PokemonCard.vue';
+import AppLoading from '@/components/AppLoading.vue';
 
 export default {
   name: 'Home',
   components: {
     PokemonCard,
+    AppLoading,
   },
   setup() {
     const state = reactive({
       pokemons: [],
       offset: 12,
       limit: 12,
+      fullyLoaded: false,
     });
 
     let debounceTimer;
@@ -57,6 +64,9 @@ export default {
             .then((data) => {
               state.pokemons.push(...data.results);
               state.offset += 12;
+              if (state.limit === 7) {
+                state.fullyLoaded = true;
+              }
               if (state.offset === 144) {
                 state.limit = 7;
               }
@@ -90,5 +100,10 @@ export default {
 <style lang="scss" scoped>
 .home {
   margin-top: 20px;
+}
+
+#loading-container {
+  width: 100%;
+  height: auto;
 }
 </style>
