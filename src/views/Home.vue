@@ -58,7 +58,7 @@ export default {
       pokemons: [],
       allPokemons: [],
       offset: 0,
-      limit: 12,
+      limit: 16,
       fullyLoaded: false,
       getPokemons: computed(() => {
         if (query.value) {
@@ -78,7 +78,7 @@ export default {
             .then((res) => res.json())
             .then((data) => {
               state.pokemons.push(...data.results);
-              state.offset += 12;
+              state.offset += 16;
               if (state.limit === 7) {
                 state.fullyLoaded = true;
                 observer.disconnect();
