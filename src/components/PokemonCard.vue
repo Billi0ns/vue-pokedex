@@ -33,7 +33,7 @@ export default {
 
     function setImage() {
       const img = new Image();
-      const imageUrl = `https://pokeres.bastionbot.org/images/pokemon/${pokemonData.id.value}.png`;
+      const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonData.id.value}.png`;
       pokemonData.imageUrl = imageUrl;
 
       img.src = imageUrl;

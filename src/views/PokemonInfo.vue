@@ -35,7 +35,7 @@ export default {
       const pokemonTypes = [];
       const pokemonAbilities = [];
       this.pokemon = data;
-      this.imageUrl = `https://pokeres.bastionbot.org/images/pokemon/${this.pokemon.id}.png`;
+      this.imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.pokemon.id}.png`;
 
       this.pokemon.types.forEach((obj) => pokemonTypes.push(obj.type.name));
       this.pokemon.types = pokemonTypes.join(', ');
